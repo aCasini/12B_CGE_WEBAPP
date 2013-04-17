@@ -21,6 +21,8 @@
     <head>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <script type="text/javascript" src="cordova-2.6.0.js"></script>
@@ -28,6 +30,9 @@
         <script type="text/javascript" src="js/googlemaps.js"></script>
         <script type="text/javascript" src="js/reachability.js"></script>
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+			<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+			<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
 		<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" />
         <title>Mobility Point</title>
         <script type="text/javascript">
@@ -40,9 +45,6 @@
         		if(reachability.IsNotConnected()){
 		            navigator.notification.alert('No internet connection available',null, '', 'OK');
 		        }else{
-		    		googleMap.createGoogleMap();
-		    		//googleMap.initializeMap();
-		    		//Chiama la funzione di geolocalizzazione per determinare dove sei
 		    		navigator.geolocation.getCurrentPosition(onSuccess, onError);
         		}
 			}
@@ -64,23 +66,23 @@
 			 * onSuccess Geolocation
 			 */
 			function onSuccess(position){
-				var posDettails = 'Latitude: '           + position.coords.latitude        + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          + position.timestamp 			       + '<br />';
-                alert(posDettails);                        
+                var latLon = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		    	var map = new GoogleMap();
+            	map.initialize(position);
 			}
 		</script>
     </head>
     <body onload="init()">
-        	<div id="geolocation">
-        	</div>
-        	<div id="map_canvas">
-			</div>    	
+    	<div data-role="page"> 
+			<div data-role="header">...</div> 
+			<div data-role="content"> 
+			<div id="map_canvas">
+				
+			</div> 
+			</div> 
+			<div data-role="footer">...</div> 
+		</div> 
+        	
 		<!--
         <div class="app">
             <h1>Mobility Point</h1>
