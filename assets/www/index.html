@@ -38,22 +38,22 @@
     </head>
     <body>
     		<!-- Home -->
-    		<div data-role="page">
+    		<div data-role="page" id="page-map">
 			    <div data-role="header" data-position="fixed">
 			    	<div data-role="navbar" data-iconpos="top">
 			            <ul>
 			                <li>
-			                    <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+			                    <a href="#page-map" data-transition="fade" data-theme="" data-icon="">
 			                        Mappa
 			                    </a>
 			                </li>
 			                <li>
-			                    <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+			                    <a href="#page-search" data-transition="fade" data-theme="" data-icon="">
 			                        Ricerca
 			                    </a>
 			                </li>
 			                <li>
-			                    <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+			                    <a href="#page-lista" data-transition="fade" data-theme="" data-icon="">
 			                        Lista POI
 			                    </a>
 			                </li>
@@ -69,6 +69,66 @@
 			        </div>
 -->			        
 			</div>
+			<!-- CHIUSURA PAG MAP -->
+			
+			<!-- APERTURA PAG-LISTA-->
+			<div data-role="page" id="page-lista">
+			    <div data-role="header" data-position="fixed">
+			    	<div data-role="navbar" data-iconpos="top">
+			            <ul>
+			                <li>
+			                    <a href="#page-map" data-transition="fade" data-theme="" data-icon="">
+			                        Mappa
+			                    </a>
+			                </li>
+			                <li>
+			                    <a href="#page-search" data-transition="fade" data-theme="" data-icon="">
+			                        Ricerca
+			                    </a>
+			                </li>
+			                <li>
+			                    <a href="#page-lista" data-transition="fade" data-theme="" data-icon="">
+			                        Lista POI
+			                    </a>
+			                </li>
+			            </ul>
+			        </div>
+			    </div>
+			    <div data-role="content">
+					LISTA
+			    </div>
+			</div>
+			<!-- CHIUSURA PAG-LISTA-->
+			
+			
+			<!-- APERTURA PAG-SEARCH-->
+			<div data-role="page" id="page-search">
+			    <div data-role="header" data-position="fixed">
+			    	<div data-role="navbar" data-iconpos="top">
+			            <ul>
+			                <li>
+			                    <a href="#page-map" data-transition="fade" data-theme="" data-icon="">
+			                        Mappa
+			                    </a>
+			                </li>
+			                <li>
+			                    <a href="#page-search" data-transition="fade" data-theme="" data-icon="">
+			                        Ricerca
+			                    </a>
+			                </li>
+			                <li>
+			                    <a href="#page-lista" data-transition="fade" data-theme="" data-icon="">
+			                        Lista POI
+			                    </a>
+			                </li>
+			            </ul>
+			        </div>
+			    </div>
+			    <div data-role="content">
+					RICERCA POI
+			    </div>
+			</div>
+			<!-- CHIUSURA PAG-SEARCH-->
 			
 <!--
 			        <div id="map_canvas">
@@ -103,3 +163,4 @@
         </script>
     </body>
 </html>
+

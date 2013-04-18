@@ -117,7 +117,7 @@ function onSuccess(position){
 	var mapBounds = new google.maps.LatLngBounds();
 	mapBounds.extend(latlon);
 	map.fitBounds(mapBounds);
-	map.setZoom(10);
+	map.setZoom(15);
 }
 
 /**
