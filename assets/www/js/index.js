@@ -44,21 +44,21 @@ var app = {
     	if(!app.checkConnection()){
     		alert('Nessuna Connessione Internet');
     	}else{
-    		navigator.geolocation.getCurrentPosition(onSuccess, onError);
     		app.showMap();
+    		navigator.geolocation.getCurrentPosition(onSuccess, onError);
     	}
         app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+        //var listeningElement = parentElement.querySelector('.listening');
+        //var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+        //listeningElement.setAttribute('style', 'display:none;');
+        //receivedElement.setAttribute('style', 'display:block;');
 
-        console.log('Received Event: ' + id);
+        //console.log('Received Event: ' + id);
     },
     checkConnection: function(){
     	var networkState = navigator.connection.type;
@@ -113,6 +113,11 @@ function onSuccess(position){
 			position: latlon,
 			map: map
 	});
+	
+	var mapBounds = new google.maps.LatLngBounds();
+	mapBounds.extend(latlon);
+	map.fitBounds(mapBounds);
+	map.setZoom(10);
 }
 
 /**
