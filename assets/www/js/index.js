@@ -118,6 +118,21 @@ function onSuccess(position){
 	mapBounds.extend(latlon);
 	map.fitBounds(mapBounds);
 	map.setZoom(15);
+	var userBounds = map.getBounds();
+	if(userBounds == null){
+		alert("userBounds is NULL");
+		//try again
+		var mapOptions = {
+			     zoom: 8,
+			     center: new google.maps.LatLng(44.355278,8.953857),
+			     mapTypeId: google.maps.MapTypeId.ROADMAP
+			 }
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        map.setZoom(15);
+		var userBounds = map.getBounds();
+	}
+	callServiceParking(userBounds);
 }
 
 /**
@@ -126,4 +141,92 @@ function onSuccess(position){
 function onError(){
 	alert('code: '    + error.code    + '\n' +
 	          'message: ' + error.message + '\n');
+}
+
+/**
+ * Funzione che si occupa di richimare l'interfaccia REST di BE
+ * 
+ */
+function callServiceParking(mapBounds){
+	var xmlhttp = null;
+	var arrayJSON = null;
+	var northEast = mapBounds.getNorthEast();
+	var southWest = mapBounds.getSouthWest();
+	
+	//alert("North East: "+northEast.lat()+ " -- "+northEast.lng());
+	//alert("South West: "+southWest.lat()+ " -- "+southWest.lng());	
+	
+	
+	if (window.XMLHttpRequest){
+			// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		}else{
+			// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+	//TODO: Da cambiare la chiamata al BE
+	var url = "http://allen.phoops.it/parking/index.json?sw_lat="+northEast.lat()+"&sw_lng="+northEast.lng()+"&ne_lat="+southWest.lat()+"&ne_lng="+southWest.lng()+"";
+	//alert(url);
+	xmlhttp.open("GET", url);	
+	alert("Chiama il servizio di BE");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState==4){
+			switch (xmlhttp.status)
+			    {
+			    case 200: // Do the Do
+			    	alert("200");
+			    	response = JSON.parse(xmlhttp.responseText);
+			    	arrayJSON = response;
+			    	//alert(arrayJSON);
+			    	generateParkPOI(arrayJSON);
+			    	break;
+			    case 404: 
+			    	alert("404");
+			    	break;
+			    case 500:
+			    	alert("500");
+			    	break;
+			    }
+		}
+	};
+	xmlhttp.send();
+}
+
+/*
+ * Function: Si occupa della generazione dei POI (parcheggi)
+ * assegnando una specifica icona dipendente da:
+ * percent_capacity = real_time_capacity/total_capacity
+ * 			percent_capacity < 0.6 -> Park Free (Icona Verde)
+ * 			percent_capacity >= 0.6 || < 1 -> Park Normal (Icona Gialla)
+ * 			percent_capacity = 1 -> Park Complete (Icona Rossa)
+ * ../img/
+ * parseFloat(string)
+ */
+function generateParkPOI(JSON){
+	//alert("Entra in generateParkPOI");
+	//alert(JSON);
+	var aJSON = JSON.parking;
+	//alert("aJSON: "+aJSON);
+	//alert("Dimensione array JSON : "+aJSON);
+	for (var i=0; i < aJSON.length; i++) {
+		var geom = aJSON[i].the_geom;
+		var patt = /\d+\.\d+/g;
+		alert(geom);
+		var result = geom.match(patt);
+		alert(result.toString());
+		var x = result.toString().split(",")[0];
+		var y = result.toString().split(",")[1];
+		
+		alert(parseFloat(x));
+		alert(parseFloat(y));
+		
+		var latlonPark = new google.maps.LatLng(parseFloat(y),parseFloat(x));
+	    var markerPark = new google.maps.Marker({
+				position: latlonPark,
+				icon: '../img/parking-free.png',
+				map: map
+		});
+		//var pPark = new google.maps.Point(parseFloat(x),parseFloat(y));
+	};
 }
