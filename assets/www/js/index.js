@@ -117,20 +117,10 @@ function onSuccess(position){
 	var mapBounds = new google.maps.LatLngBounds();
 	mapBounds.extend(latlon);
 	map.fitBounds(mapBounds);
-	map.setZoom(15);
+	map.setZoom(13);
 	var userBounds = map.getBounds();
 	if(userBounds == null){
 		alert("userBounds is NULL");
-		//try again
-		var mapOptions = {
-			     zoom: 8,
-			     center: new google.maps.LatLng(44.355278,8.953857),
-			     mapTypeId: google.maps.MapTypeId.ROADMAP
-			 }
-
-        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        map.setZoom(15);
-		var userBounds = map.getBounds();
 	}
 	callServiceParking(userBounds);
 }
@@ -177,6 +167,7 @@ function callServiceParking(mapBounds){
 			    case 200: // Do the Do
 			    	alert("200");
 			    	response = JSON.parse(xmlhttp.responseText);
+			    	//alert(xmlhttp.responseText);
 			    	arrayJSON = response;
 			    	//alert(arrayJSON);
 			    	generateParkPOI(arrayJSON);
@@ -212,21 +203,40 @@ function generateParkPOI(JSON){
 	for (var i=0; i < aJSON.length; i++) {
 		var geom = aJSON[i].the_geom;
 		var patt = /\d+\.\d+/g;
-		alert(geom);
+		//alert(geom);
 		var result = geom.match(patt);
-		alert(result.toString());
+		//alert(result.toString());
 		var x = result.toString().split(",")[0];
 		var y = result.toString().split(",")[1];
 		
-		alert(parseFloat(x));
-		alert(parseFloat(y));
+		//alert(parseFloat(x));
+		//alert(parseFloat(y));
 		
 		var latlonPark = new google.maps.LatLng(parseFloat(y),parseFloat(x));
+		var image = 'a.png';
+		
+		var pGreen = new google.maps.MarkerImage('img/parking-green.png');
+		var pYellow = new google.maps.MarkerImage('img/parking-yellow.gif');
+		var pRed = new google.maps.MarkerImage('img/parking-red.png');
+
 	    var markerPark = new google.maps.Marker({
 				position: latlonPark,
-				icon: '../img/parking-free.png',
+				icon: pGreen,
 				map: map
 		});
+		
+		//Calcolo percentuale occupazione
+		var percentualCapacity = aJSON[i].real_time_capacity/aJSON[i].total_capacity;
+		if(percentualCapacity < 0.6){
+			//Parcheggio Free --> ICONA VERDE
+			markerPark.setIcon(pGreen);
+		}else if(percentualCapacity >= 0.6 && percentualCapacity < 1 ){
+			//Parcheggio quasi pieno --> ICONA GIALL
+			markerPark.setIcon(pYellow);
+		}else{
+			//Parcheggio completo --> ICONA ROSSA
+			markerPark.setIcon(pRed);
+		}
 		//var pPark = new google.maps.Point(parseFloat(x),parseFloat(y));
 	};
 }
