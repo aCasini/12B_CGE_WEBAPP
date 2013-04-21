@@ -195,7 +195,11 @@ function callServiceParking(mapBounds){
  * parseFloat(string)
  */
 function generateParkPOI(JSON){
+	//alert("Entra in generateParkPOI");
+	//alert(JSON);
 	var aJSON = JSON.parking;
+	//alert("aJSON: "+aJSON);
+	//alert("Dimensione array JSON : "+aJSON);
 	for (var i=0; i < aJSON.length; i++) {
 		var geom = aJSON[i].the_geom;
 		var patt = /\d+\.\d+/g;
@@ -203,12 +207,13 @@ function generateParkPOI(JSON){
 		var x = result.toString().split(",")[0];
 		var y = result.toString().split(",")[1];
 		var latlonPark = new google.maps.LatLng(parseFloat(y),parseFloat(x));
+		var image = 'a.png';
 		
 		var pGreen = new google.maps.MarkerImage('img/parking-green.png');
 		var pYellow = new google.maps.MarkerImage('img/parking-yellow.gif');
 		var pRed = new google.maps.MarkerImage('img/parking-red.png');
 
-		//var contentString = '<div id="content">'+aJSON[i].nome+'</div>';
+		var contentString = '<div id="content">'+aJSON[i].nome+'</div>';
 		
        var infowindow = new google.maps.InfoWindow({
       		content: contentString
