@@ -167,7 +167,7 @@ function callServiceParking(mapBounds){
 			    case 200: // Do the Do
 			    	alert("200");
 			    	response = JSON.parse(xmlhttp.responseText);
-			    	//alert(xmlhttp.responseText);
+			    	alert(xmlhttp.responseText);
 			    	arrayJSON = response;
 			    	//alert(arrayJSON);
 			    	generateParkPOI(arrayJSON);
@@ -195,35 +195,36 @@ function callServiceParking(mapBounds){
  * parseFloat(string)
  */
 function generateParkPOI(JSON){
-	//alert("Entra in generateParkPOI");
-	//alert(JSON);
 	var aJSON = JSON.parking;
-	//alert("aJSON: "+aJSON);
-	//alert("Dimensione array JSON : "+aJSON);
 	for (var i=0; i < aJSON.length; i++) {
 		var geom = aJSON[i].the_geom;
 		var patt = /\d+\.\d+/g;
-		//alert(geom);
 		var result = geom.match(patt);
-		//alert(result.toString());
 		var x = result.toString().split(",")[0];
 		var y = result.toString().split(",")[1];
-		
-		//alert(parseFloat(x));
-		//alert(parseFloat(y));
-		
 		var latlonPark = new google.maps.LatLng(parseFloat(y),parseFloat(x));
-		var image = 'a.png';
 		
 		var pGreen = new google.maps.MarkerImage('img/parking-green.png');
 		var pYellow = new google.maps.MarkerImage('img/parking-yellow.gif');
 		var pRed = new google.maps.MarkerImage('img/parking-red.png');
 
+		//var contentString = '<div id="content">'+aJSON[i].nome+'</div>';
+		
+       var infowindow = new google.maps.InfoWindow({
+      		content: contentString
+  	   });
+
 	    var markerPark = new google.maps.Marker({
 				position: latlonPark,
-				icon: pGreen,
+				animation: google.maps.Animation.DROP,
 				map: map
 		});
+		google.maps.event.addListener(markerPark, 'click', (function(markerPark, i) {
+	        return function() {
+	            infowindow.setContent('<div id="content">'+aJSON[i].nome+'</div>');
+	            infowindow.open(map, markerPark);
+	        }
+    	})(markerPark, i));
 		
 		//Calcolo percentuale occupazione
 		var percentualCapacity = aJSON[i].real_time_capacity/aJSON[i].total_capacity;
@@ -239,4 +240,15 @@ function generateParkPOI(JSON){
 		}
 		//var pPark = new google.maps.Point(parseFloat(x),parseFloat(y));
 	};
+	
+	//Recupero informazioni
+	//	categoria
+	//	comune
+	//	indirizzo
+	//	macrotipol
+	//  nome
+	//	note
+	//	real_time_capacity
+	//	tipologia
+	//	total_capacity
 }
